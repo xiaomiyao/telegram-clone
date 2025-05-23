@@ -13,7 +13,7 @@ app.http('register', {
             };
         }
 
-        if (email === "test@example.com") {
+        if (email === email) {
             return {
                 status: 409,
                 body: JSON.stringify({ error: 'User already exists.' })
