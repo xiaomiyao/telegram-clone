@@ -1,4 +1,10 @@
 const { app } = require('@azure/functions');
+const { CosmosClient } = require('@azure/cosmos');
+const bcrypt = require('bcryptjs');
+
+const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING);
+const database = client.database('telegram-db');
+const container = database.container('Users');
 
 app.http('login', {
     methods: ['POST'],
@@ -13,17 +19,34 @@ app.http('login', {
             };
         }
 
-        // 🔐 Fake login logic
-        if (email === "test@example.com" && password === "123456") {
+        // Find user by email
+        const query = `SELECT * FROM Users u WHERE u.email = @email`;
+        const { resources: users } = await container.items
+            .query({ query, parameters: [{ name: '@email', value: email }] })
+            .fetchAll();
+
+        if (users.length === 0) {
             return {
-                status: 200,
-                body: JSON.stringify({ message: 'Login successful', token: 'FAKE-JWT-TOKEN' })
+                status: 401,
+                body: JSON.stringify({ error: 'Invalid email or password.' })
+            };
+        }
+
+        const user = users[0];
+
+        // Compare hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return {
+                status: 401,
+                body: JSON.stringify({ error: 'Invalid email or password.' })
             };
         }
 
         return {
-            status: 401,
-            body: JSON.stringify({ error: 'Invalid email or password' })
+            status: 200,
+            body: JSON.stringify({ message: 'Login successful' })
         };
     }
 });
+// This code defines an Azure Function that handles user login. It checks if the provided email and password match a user in the Cosmos DB database. If they do, it returns a success message; otherwise, it returns an error message.
