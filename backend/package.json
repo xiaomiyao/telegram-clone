@@ -8,7 +8,9 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "@azure/functions": "^4.0.0"
+    "@azure/cosmos": "^4.4.1",
+    "@azure/functions": "^4.0.0",
+    "bcryptjs": "^3.0.2"
   },
   "devDependencies": {
     "azure-functions-core-tools": "^4.x"
