@@ -5,6 +5,9 @@ const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING);
 const database = client.database('telegram-db');
 const container = database.container('Users');
 
+const bcrypt = require('bcryptjs');
+
+
 app.http('register', {
     methods: ['POST'],
     authLevel: 'anonymous',
@@ -32,11 +35,15 @@ app.http('register', {
         }
 
         // Create user
-        const newUser = {
-            id: email, // use email as unique id
-            email,
-            password // NOTE: will replace with hashed version later
-        };
+        // Hash the password before saving
+const hashedPassword = await bcrypt.hash(password, 10);
+
+const newUser = {
+  id: email,
+  email,
+  password: hashedPassword
+};
+
 
         await container.items.create(newUser);
 
