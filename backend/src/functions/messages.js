@@ -75,11 +75,11 @@ app.http('messages', {
     }
 
     // GET: fetch messages for this user
-    const query = `SELECT * FROM Messages m WHERE m.userEmail = @userEmail ORDER BY m.createdAt DESC`;
+    const query = `SELECT * FROM Messages m ORDER BY m.createdAt DESC`;
     const { resources: messages } = await container.items
-      .query({ query, parameters: [{ name: '@userEmail', value: userEmail }] })
+      .query(query)
       .fetchAll();
-
+    
     return {
       status: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },

@@ -78,16 +78,19 @@ function App() {
 
   if (!loggedIn) {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-        <h1>{mode === 'register' ? 'Register' : 'Login'}</h1>
-
-        <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '300px' }}>
+      <div style={styles.container}>
+        <h2 style={styles.heading}>
+          {mode === 'register' ? 'Register' : 'Login'}
+        </h2>
+    
+        <form onSubmit={handleAuth} style={styles.form}>
           <input
             type="email"
             placeholder="Email"
             value={email}
             required
             onChange={(e) => setEmail(e.target.value)}
+            style={styles.input}
           />
           <input
             type="password"
@@ -95,20 +98,24 @@ function App() {
             value={password}
             required
             onChange={(e) => setPassword(e.target.value)}
+            style={styles.input}
           />
-          <button type="submit">{mode === 'register' ? 'Register' : 'Login'}</button>
+          <button type="submit" style={styles.button}>
+            {mode === 'register' ? 'Register' : 'Login'}
+          </button>
         </form>
-
-        <p>{message}</p>
-
+    
+        <p style={{ color: '#555', marginTop: '1rem' }}>{message}</p>
+    
         <button onClick={() => {
           setMode(mode === 'register' ? 'login' : 'register');
           setMessage('');
-        }} style={{ marginTop: '1rem' }}>
+        }} style={styles.linkButton}>
           Switch to {mode === 'register' ? 'Login' : 'Register'}
         </button>
       </div>
     );
+    
   }
 
   return (
@@ -164,5 +171,54 @@ function App() {
   );
   
 }
+
+const styles = {
+  container: {
+    width: '100%',
+    maxWidth: '400px',
+    margin: '100px auto',
+    padding: '2rem',
+    borderRadius: '12px',
+    background: '#ffffff',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+    fontFamily: 'Segoe UI, sans-serif'
+  },
+  heading: {
+    fontSize: '1.8rem',
+    marginBottom: '1.5rem',
+    color: '#0088cc' // Telegram blue
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem'
+  },
+  input: {
+    padding: '0.75rem',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    fontSize: '1rem'
+  },
+  button: {
+    padding: '0.75rem',
+    backgroundColor: '#0088cc',
+    color: '#fff',
+    border: 'none',
+    fontWeight: 'bold',
+    borderRadius: '6px',
+    cursor: 'pointer'
+  },
+  linkButton: {
+    marginTop: '1rem',
+    background: 'none',
+    border: 'none',
+    color: '#0088cc',
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    fontSize: '0.9rem'
+  }
+};
+
 
 export default App;
